@@ -18,6 +18,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/rakyll/hey/cmd"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -64,6 +65,7 @@ var (
 	disableKeepAlives  = flag.Bool("disable-keepalive", false, "")
 	disableRedirects   = flag.Bool("disable-redirects", false, "")
 	proxyAddr          = flag.String("x", "", "")
+	version            = flag.Bool("version", true, "")
 )
 
 var usage = `Usage: hey [options...] <url>
@@ -101,6 +103,7 @@ Options:
   -disable-redirects    Disable following of HTTP redirects
   -cpus                 Number of used cpu cores.
                         (default for current machine is %d cores)
+  -version              Print version
 `
 
 func main() {
@@ -114,6 +117,11 @@ func main() {
 	flag.Parse()
 	if flag.NArg() < 1 {
 		usageAndExit("")
+	}
+
+	if *version {
+		fmt.Printf("%v-%v", cmd.Version, cmd.Release)
+		return
 	}
 
 	runtime.GOMAXPROCS(*cpus)
